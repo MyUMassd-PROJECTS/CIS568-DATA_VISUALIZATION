@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <title>Force Simulation</title>
+    <script src="libs/d3.js"></script>
+    <style>
+        #statePanel {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        #redirectButton {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+        }
+
+        .caption {
+            display: flex;
+            justify-content: center;
+            font-family: sans-serif;
+            font-weight: bold;
+            font-size: 2rem;
+            color: gray;
+            margin-top: 1rem;
+        }
+
+        .main-caption {
+            margin-top: 3rem;
+        }
+
+        #redirectButton {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            font-size: 1rem;
+            border-radius: 0.25rem;
+            transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="main-caption caption">
+        Network Visualization for Non-Fatal Cases of Mass Shootings in USA (2014-2022)
+    </div>
+
+    <!-- Button to redirect to main HTML page -->
+    <button id="redirectButton" class="btn btn-secondary">Go to Main Page</button>
+
+    <svg id="visualization" viewBox="0 0 3000 1800" style="align-content: center"></svg>
+    <div id="statePanel"></div>
+
+    <script>
+        d3.json("./data/network.json").then(function (data) {
+            const nodes = data.nodes;
+            const edges = data.links;
+
+            const nodesByState = d3.group(nodes, d => d.state)
+
+            // Assign a random parent node for each state
+            nodesByState.forEach((stateNodes) => {
+                const parentNode = stateNodes[Math.floor(Math.random() * stateNodes.length)];
+                stateNodes.forEach((node) => {
+                    if (node != parentNode) {
+                        edges.push({ source: parentNode.id, target: node.id });
+                    }
+                });
+            });
+
+            const svg = d3.select("#visualization");
+            const width = parseInt(svg.attr("viewBox").split(" ")[2]);
+            const height = parseInt(svg.attr("viewBox").split(" ")[3]);
+            const zoom = d3.zoom()
+                .scaleExtent([0.1, 10])
+                .on("zoom", () => {
+                    svg.attr("transform", d3.event.transform);
+                });
+
+            const chargeForce = d3.forceManyBody().strength(-2);
+            const linkDistance = 10;
+
+            const simulation = d3.forceSimulation(nodes)
+                .force("link", d3.forceLink(edges).id(d => d.id).distance(linkDistance))
+                .force("charge", chargeForce)
+                .force("collide", d3.forceCollide(10))
+                .force("center", d3.forceCenter(width / 2, height / 2));
+
+            const statePanel = d3.select("#statePanel");
+
+            const nodeSizeScale = d3.scaleLinear()
+                .domain([0, d3.max(nodes, d => d.injured)])
+                .range([5, 20]);
+
+            const link = svg.selectAll(".link")
+                .data(edges)
+                .enter().append("line")
+                .attr("class", "link")
+                .style("stroke", "maroon")
+                .attr("stroke-width", 0.5);
+
+            const numberOfColors = 10;
+
+            const viridisColors = Array.from({ length: numberOfColors }, (d, i) => d3.interpolateViridis(i / (numberOfColors - 1)));
+            const uniqueStates = [...new Set(nodes.map(d => d.state))];
+            const colorScale = d3.scaleOrdinal(d3.schemeCategory10).domain(uniqueStates);
+
+            const clusters = svg.selectAll(".cluster")
+                .data(nodesByState.values())
+                .enter().append("g")
+                .attr("class", "cluster");
+
+            const node = svg.selectAll(".node")
+                .data(nodes)
+                .enter().append("circle")
+                .attr("class", "node")
+                .attr("r", d => nodeSizeScale(d.injured))
+                .attr("fill", d => colorScale(d.state))
+                .on("mouseover", handleMouseOver)
+                .on("mouseout", handleMouseOut);
+
+            clusters.append("text")
+                .text(d => d[0].state)
+                .style("font-size", "20px")
+                .attr("dx", d => nodeSizeScale(d[0].injured) + 5)
+                .attr("dy", ".60em");
+
+            function handleMouseOver(event, d) {
+                statePanel.text(d.state);
+            }
+
+            function handleMouseOut() {
+                statePanel.text("");
+            }
+
+            function ticked() {
+                link
+                    .attr("x1", d => d.source.x)
+                    .attr("y1", d => d.source.y)
+                    .attr("x2", d => d.target.x)
+                    .attr("y2", d => d.target.y);
+
+                clusters.attr("transform", d => `translate(${d[0].x},${d[0].y})`);
+
+                node
+                    .attr("cx", d => d.x)
+                    .attr("cy", d => d.y);
+            }
+
+            simulation.on("tick", ticked);
+            svg.call(zoom);
+
+
+        });
+
+        // Button click event to redirect to main HTML page
+        document.getElementById("redirectButton").addEventListener("click", function () {
+            window.location.href = "index.html";
+        });
+
+    </script>
+</body>
+
+</html>

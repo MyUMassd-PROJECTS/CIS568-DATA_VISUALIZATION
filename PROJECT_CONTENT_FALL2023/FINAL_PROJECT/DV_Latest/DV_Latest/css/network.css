@@ -1,0 +1,27 @@
+circle {
+    fill-opacity: .9;
+}
+
+line {
+    stroke: black;
+    stroke-opacity: 0.6;
+}
+
+.label {
+    font-size: x-small;
+    font-family: sans-serif;
+}
+
+.inactive {
+    opacity: .1;
+}
+
+.node text {
+    display: none;
+    font: 30px Roboto;
+    z-index: 1000;
+}
+
+.node:hover text {
+    display: inline;
+}

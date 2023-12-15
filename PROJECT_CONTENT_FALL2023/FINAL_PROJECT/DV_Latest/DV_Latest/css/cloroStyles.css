@@ -1,0 +1,83 @@
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: sans-serif;
+    flex-direction: column;
+    background-color: rgb(249, 250, 247);
+}
+
+.caption1 {
+    display: flex;
+    justify-content: center;
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 2rem;
+    color: gray;
+    margin-top: 1rem;
+}
+
+.caption2 {
+    display: flex;
+    justify-content: center;
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 2rem;
+    color: gray;
+    margin-top: 1rem;
+}
+
+.caption {
+    display: flex;
+    justify-content: center;
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 2rem;
+    color: gray;
+    margin-top: 1rem;
+}
+
+.main-caption {
+    margin-top: 3rem;
+}
+
+.control {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-secondary {
+    background-color: lightgray;
+    color: black;
+    border-color: transparent;
+}
+
+.tooltip {
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 5px;
+    font-size: 12px;
+    display: none;
+}
+
+.map-container {
+    margin-top: 20px; /* Adjust as needed */
+}
+
+#redirectButton {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    height: 30px;
+    border: 1px solid black;
+    font-size: smaller;
+    margin-top: 2px;
+}
