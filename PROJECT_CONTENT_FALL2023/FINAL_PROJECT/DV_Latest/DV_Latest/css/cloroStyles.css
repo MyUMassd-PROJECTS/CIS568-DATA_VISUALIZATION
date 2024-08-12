@@ -1,13 +1,16 @@
+/* Main container styling */
 main {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: sans-serif;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: sans-serif;
     background-color: rgb(249, 250, 247);
+    padding: 1rem; /* Add padding for better spacing */
 }
 
-.caption1 {
+/* Caption styling */
+.caption, .caption1, .caption2 {
     display: flex;
     justify-content: center;
     font-family: sans-serif;
@@ -17,60 +20,46 @@ main {
     margin-top: 1rem;
 }
 
-.caption2 {
-    display: flex;
-    justify-content: center;
-    font-family: sans-serif;
-    font-weight: bold;
-    font-size: 2rem;
-    color: gray;
-    margin-top: 1rem;
-}
-
-.caption {
-    display: flex;
-    justify-content: center;
-    font-family: sans-serif;
-    font-weight: bold;
-    font-size: 2rem;
-    color: gray;
-    margin-top: 1rem;
-}
-
+/* Additional margin for the main caption */
 .main-caption {
     margin-top: 3rem;
 }
 
+/* Control elements styling */
 .control {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    margin: 1rem 0; /* Shortened margin shorthand */
 }
 
+/* Container styling */
 .container {
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
+/* Secondary button styling */
 .btn-secondary {
     background-color: lightgray;
     color: black;
-    border-color: transparent;
+    border: none; /* Simplified border property */
 }
 
+/* Tooltip styling */
 .tooltip {
     position: absolute;
     background-color: #fff;
     border: 1px solid #ddd;
     padding: 5px;
-    font-size: 12px;
+    font-size: 0.75rem; /* Changed to rem for consistency */
     display: none;
 }
 
+/* Map container styling */
 .map-container {
     margin-top: 20px; /* Adjust as needed */
 }
 
+/* Redirect button styling */
 #redirectButton {
     position: fixed;
     top: 10px;
@@ -78,6 +67,6 @@ main {
     z-index: 1000;
     height: 30px;
     border: 1px solid black;
-    font-size: smaller;
+    font-size: 0.75rem; /* Changed to rem for consistency */
     margin-top: 2px;
 }
